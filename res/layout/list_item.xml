@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/tv_city_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/iv_img_list"
+        android:paddingLeft="10dip" />
+
+    <ImageView
+        android:id="@+id/iv_img_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/divider_list"
+        android:src="@drawable/arrow_down" />
+
+    <View
+        android:id="@+id/divider_list"
+        android:layout_width="1dip"
+        android:layout_height="40dip"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="7dip"
+        android:layout_toLeftOf="@+id/tv_timezone_list"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/tv_timezone_list"
+        android:layout_width="40dip"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="right"
+        android:paddingRight="10dip" />
+
+</RelativeLayout>

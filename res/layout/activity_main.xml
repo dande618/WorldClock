@@ -1,0 +1,149 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:id="@+id/city_time"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/left_arrow"
+            style="@style/Button"
+            android:contentDescription="@string/arrow_button"
+            android:src="@drawable/arrow_left" />
+
+        <com.example.worldclock.MyClock
+            android:id="@+id/clock"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="2" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="City"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Time"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Day, Date"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/right_arrow"
+            style="@style/Button"
+            android:contentDescription="@string/arrow_button"
+            android:src="@drawable/arrow_right" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/city_time"
+        android:background="?android:attr/listDivider" />
+
+    <AutoCompleteTextView
+        android:id="@+id/edit_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:layout_marginTop="20dip"
+        android:background="@drawable/bg_edittext"
+        android:completionThreshold="1"
+        android:hint="Enter city name"
+        android:maxLines="1"
+        android:padding="5dip"
+        android:textColorHint="#AAAAAA"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_hint_from_below"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_text"
+        android:layout_marginBottom="10dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:layout_marginTop="10dip"
+        android:text="Or choose from below:"
+        android:textSize="14sp" />
+
+    <ListView
+        android:id="@+id/list_cities"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/bottom_buttons"
+        android:layout_below="@+id/tv_hint_from_below"
+        android:layout_marginBottom="10dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:layout_marginTop="1dip"
+        android:background="@drawable/edittext_normal"
+        android:scrollbars="none" >
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="35dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/left_button"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button"
+            android:text="Done" />
+
+        <Button
+            android:id="@+id/right_button"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button" />
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="0dip"
+        android:layout_height="0dip" />
+
+</RelativeLayout>
