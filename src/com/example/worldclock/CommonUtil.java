@@ -2,7 +2,6 @@ package com.example.worldclock;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,30 +11,23 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 
 public class CommonUtil {
-	public static String getCurrentTime(Context context, String cityName) {
-		Date date = Calendar.getInstance().getTime();
-		java.text.DateFormat dateFormat = DateFormat.getTimeFormat(context);
-		if (TextUtils.isEmpty(cityName)) {
-			dateFormat.setTimeZone(TimeZone.getDefault());
-		} else {
-			dateFormat
-					.setTimeZone(TimeZone.getTimeZone(splitAndJoin(cityName)));
-		}
-		String currentTime = dateFormat.format(date);
-		return currentTime;
-	}
-
-	public static String getCurrentDate(Context context, String cityName) {
-		Date date = Calendar.getInstance().getTime();
+	public static String[] getTargetTime(Context context, String cityName) {
+		String[] strings = new String[2];
+		java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
 		java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);
 		if (TextUtils.isEmpty(cityName)) {
-			dateFormat.setTimeZone(TimeZone.getDefault());
+			TimeZone timeZone = TimeZone.getDefault();
+			timeFormat.setTimeZone(timeZone);
+			dateFormat.setTimeZone(timeZone);
 		} else {
+			timeFormat
+					.setTimeZone(TimeZone.getTimeZone(splitAndJoin(cityName)));
 			dateFormat
 					.setTimeZone(TimeZone.getTimeZone(splitAndJoin(cityName)));
 		}
-		String currentDate = dateFormat.format(date);
-		return currentDate;
+		strings[0] = timeFormat.format(Calendar.getInstance().getTime());
+		strings[1] = dateFormat.format(Calendar.getInstance().getTime());
+		return strings;
 	}
 
 	public static ArrayList<String> getCitiesOfTimezone(int timezone) {

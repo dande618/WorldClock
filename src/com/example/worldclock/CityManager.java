@@ -1,8 +1,11 @@
 package com.example.worldclock;
 
+import java.util.TimeZone;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
 
 public class CityManager {
 	private static CityManager mCityManager;
@@ -38,11 +41,17 @@ public class CityManager {
 		switch (id) {
 		case 0:
 		case 1:
+			if (TextUtils.isEmpty(name) || name.equals("City")) {
+				name = getCurrentCityName();
+			}
 			editor.putString("first_city_name", name);
 			if (loadCityCount() == 0)
 				saveCityCount(1);
 			break;
 		case 2:
+			if (name.equals("City")) {
+				return;
+			}
 			editor.putString("secend_city_name", name);
 			saveCityCount(2);
 			break;
@@ -58,5 +67,14 @@ public class CityManager {
 			return mSharedata.getString("secend_city_name", null);
 		}
 		return null;
+	}
+
+	public String getCurrentCityName() {
+		return CommonUtil.splitAndJoin(TimeZone.getDefault().getID());
+	}
+
+	public boolean deleteSecendCity() {
+		saveCityCount(1);
+		return mSharedata.edit().remove("secend_city_name").commit();
 	}
 }
