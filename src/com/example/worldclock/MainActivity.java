@@ -1,7 +1,6 @@
 package com.example.worldclock;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
 import android.app.AlertDialog;
@@ -38,6 +37,7 @@ public class MainActivity extends FragmentActivity implements
 	private boolean secendCityDeleted = false;
 
 	private BroadcastReceiver mReceiver = null;
+	private ArrayList<MyFragment> mFragmentList = new ArrayList<MyFragment>(2);
 	public static final int DEFAULT_CITY = 0;
 	public static final int FIRST_CITY = 1;
 	public static final int SECEND_CITY = 2;
@@ -54,6 +54,8 @@ public class MainActivity extends FragmentActivity implements
 		initViews();
 		initListView();
 		loadCity(mCurrentCityID);
+		mFragmentList.get(0).setViewPager(mViewPager);
+		mFragmentList.get(1).setViewPager(mViewPager);
 	}
 
 	@Override
@@ -154,20 +156,16 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	private void updateCurrentClock(String cityName) {
-		List<Fragment> list = getSupportFragmentManager().getFragments();
-		((MyFragment) list.get(mCurrentCityID - 1)).update(cityName);
+		mFragmentList.get(mCurrentCityID - 1).update(cityName);
 	}
 
 	private void updateAllClocks() {
-		List<Fragment> list = getSupportFragmentManager().getFragments();
-		for (Fragment fragment : list) {
-			((MyFragment) fragment).update();
-		}
+		mFragmentList.get(0).updateByMinute();
+		mFragmentList.get(1).updateByMinute();
 	}
 
 	private String getClockCityName() {
-		List<Fragment> list = getSupportFragmentManager().getFragments();
-		return ((MyFragment) list.get(mCurrentCityID - 1)).getClockCityName();
+		return mFragmentList.get(mCurrentCityID - 1).getClockCityName();
 	}
 
 	@Override
@@ -204,25 +202,29 @@ public class MainActivity extends FragmentActivity implements
 			CityManager.getInstance(MainActivity.this).saveCityName(
 					mCurrentCityID, getClockCityName());
 		}
+		secendCityDeleted = false;
 		mCurrentCityID = arg0 + 1;
 		loadCity(arg0 + 1);
+		((AutoCompleteTextView) findViewById(R.id.edit_text)).setText("");
 	}
 
 	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+
 		public MyFragmentPagerAdapter(FragmentManager fm) {
 			super(fm);
+			mFragmentList.add(new MyFragment(MainActivity.this, FIRST_CITY));
+			mFragmentList.add(new MyFragment(MainActivity.this, SECEND_CITY));
 		}
 
 		@Override
 		public Fragment getItem(int arg0) {
-			return (new MyFragment(MainActivity.this, arg0 + 1));
+			return mFragmentList.get(arg0);
 		}
 
 		@Override
 		public int getCount() {
 			return 2;
 		}
-
 	}
 
 	private class MyListener implements OnClickListener {
@@ -237,6 +239,7 @@ public class MainActivity extends FragmentActivity implements
 			if (mCurrentCityID == SECEND_CITY) {
 				mCityManager.deleteSecendCity();
 				secendCityDeleted = true;
+				mFragmentList.get(SECEND_CITY - 1).clearSecendCity();
 			}
 			mViewPager.setCurrentItem(cityNumber - 1);
 		}

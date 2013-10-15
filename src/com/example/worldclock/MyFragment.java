@@ -6,8 +6,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ public class MyFragment extends Fragment {
 	private TextView mCityTextView;
 	private ImageView mLeftArrow;
 	private ImageView mRightArrow;
+	private ViewPager mViewPager;
 	private MyClock mClock = null;
 
 	private int mCityNum = MainActivity.DEFAULT_CITY;
@@ -67,14 +70,25 @@ public class MyFragment extends Fragment {
 			} else {
 				update(mCityManager.loadCityName(MainActivity.FIRST_CITY));
 			}
+			mRightArrow.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					mViewPager.setCurrentItem(MainActivity.SECEND_CITY - 1);
+				}
+			});
 			break;
 		case MainActivity.SECEND_CITY:
 			mRightArrow.setVisibility(View.INVISIBLE);
-			if (mCityManager.loadCityCount() < 2) {
-				return;
-			} else {
+			if (mCityManager.loadCityCount() == 2)
 				update(mCityManager.loadCityName(MainActivity.SECEND_CITY));
-			}
+			mLeftArrow.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					mViewPager.setCurrentItem(MainActivity.FIRST_CITY - 1);
+				}
+			});
 			break;
 		default:
 			break;
@@ -90,13 +104,19 @@ public class MyFragment extends Fragment {
 		});
 	}
 
+	private void showTimeAndDate(String cityName) {
+		String[] strings = CommonUtil.getTargetTime(mContext, cityName);
+		mTimeTextView.setText(strings[0]);
+		mDateTextView.setText(strings[1]);
+	}
+
 	public void update(String cityName) {
 		showTimeAndDate(cityName);
 		mCityTextView.setText(cityName);
 		mClock.update(cityName);
 	}
 
-	public void update() {
+	public void updateByMinute() {
 		String cityName = mCityTextView.getText().toString();
 		if (!cityName.equals("City"))
 			showTimeAndDate(cityName);
@@ -106,9 +126,16 @@ public class MyFragment extends Fragment {
 		return mCityTextView.getText().toString();
 	}
 
-	private void showTimeAndDate(String cityName) {
-		String[] strings = CommonUtil.getTargetTime(mContext, cityName);
-		mTimeTextView.setText(strings[0]);
-		mDateTextView.setText(strings[1]);
+	public void clearSecendCity() {
+		if (mCityNum == MainActivity.SECEND_CITY) {
+			mTimeTextView.setText("Time");
+			mDateTextView.setText("Day, Date");
+			mCityTextView.setText("City");
+			mClock.update(mCityManager.getCurrentCityName());
+		}
+	}
+
+	public void setViewPager(ViewPager viewPager) {
+		this.mViewPager = viewPager;
 	}
 }

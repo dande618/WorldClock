@@ -13,14 +13,15 @@ import android.widget.TextView;
 public class MyAdapter extends BaseAdapter {
 	private Context mContext;
 	private LayoutInflater mInflater;
-	private DisplayMetrics mMetrics;
+
+	// private DisplayMetrics mMetrics;
 
 	public MyAdapter(Context context, DisplayMetrics metrics) {
 		super();
 		mContext = context;
 		mInflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mMetrics = metrics;
+		// mMetrics = metrics;
 	}
 
 	@Override
