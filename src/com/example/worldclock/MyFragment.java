@@ -44,6 +44,12 @@ public class MyFragment extends Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		updateByMinute();
+	}
+
+	@Override
 	public void onDestroyView() {
 		if (mClock != null) {
 			mClock.stop();

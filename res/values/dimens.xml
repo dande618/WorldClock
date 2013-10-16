@@ -1,4 +1,5 @@
 <resources>
 
+    <dimen name="clock_height">180dip</dimen>
 
 </resources>

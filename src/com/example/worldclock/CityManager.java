@@ -61,9 +61,9 @@ public class CityManager {
 
 	public String loadCityName(int id) {
 		switch (id) {
-		case 1:
+		case MainActivity.FIRST_CITY:
 			return mSharedata.getString("first_city_name", null);
-		case 2:
+		case MainActivity.SECEND_CITY:
 			return mSharedata.getString("secend_city_name", null);
 		}
 		return null;
