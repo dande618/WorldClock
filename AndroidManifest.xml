@@ -28,13 +28,22 @@
         <receiver android:name="com.example.worldclock.ClockWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.example.worldclock.UPDATE_WIDGET" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/clockwidgetproviderinfo" />
         </receiver>
-        <receiver android:name="com.example.worldclock.AlarmClass" />
+
+        <service
+            android:name=".MyService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.example.worldclock.TIME_SERVICE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

@@ -32,18 +32,26 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 
 		final int n = appWidgetIds.length;
 		for (int i = 0; i < n; i++) {
-			updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
+			appWidgetManager.updateAppWidget(appWidgetIds[i],
+					updateViews(context));
 		}
+		startService(context);
 	}
-
-	private void updateAppWidget(Context context,
-			AppWidgetManager appWidgetManager, int appWidgetId) {
-		appWidgetManager.updateAppWidget(appWidgetId, updateViews(context));
-	}
-
+	
+	@Override
 	public void onReceive(Context context, Intent intent) {
+		if (intent.getAction().equals(MyService.UPDATE_CLOCK)) {
+			updateViews(context);
+		} else if (intent.getAction().equals(
+				"android.intent.action.USER_PRESENT")) {
+			startService(context);
+		}
 		super.onReceive(context, intent);
 		Log.i("onReceive", "onReceive " + intent.getAction());
+	}
+
+	private void startService(Context context) {
+		context.startService(new Intent(MyService.SERVICE_ACTION));
 	}
 
 	protected RemoteViews updateViews(Context context) {
@@ -74,7 +82,7 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 
 		Log.i("onDrawClock", "ClockWidgetProvider onDrawClock");
 
-		// TODO set timezone
+		// TODO set time zone
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR);
 		int minute = cal.get(Calendar.MINUTE);
