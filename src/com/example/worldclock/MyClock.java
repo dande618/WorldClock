@@ -70,7 +70,7 @@ public class MyClock extends View {
 		int minute = cal.get(Calendar.MINUTE);
 		int second = cal.get(Calendar.SECOND);
 		float hourRotate = hour * 30.0f + minute / 60.0f * 30.0f;
-		float minuteRotate = minute * 6.0f;
+		float minuteRotate = minute * 6.0f + second / 60.0f * 6.0f;
 		float secondRotate = second * 6.0f;
 
 		centerX = getWidth() / 2;
