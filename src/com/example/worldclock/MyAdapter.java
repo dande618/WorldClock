@@ -7,21 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class MyAdapter extends BaseAdapter {
 	private Context mContext;
 	private LayoutInflater mInflater;
-
-	// private DisplayMetrics mMetrics;
+	private int mLastPosition;
+	private DisplayMetrics mMetrics;
 
 	public MyAdapter(Context context, DisplayMetrics metrics) {
 		super();
 		mContext = context;
 		mInflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		// mMetrics = metrics;
+		mMetrics = metrics;
 	}
 
 	@Override
@@ -62,14 +63,22 @@ public class MyAdapter extends BaseAdapter {
 		String city = CommonUtil.getCitiesOfTimezone(position - 12).get(0);
 		holder.cityTextView.setText(city);
 		Animation animation = null;
-		// animation = new TranslateAnimation(0, 0, mMetrics.heightPixels,
-		// 0);
-		animation = new AlphaAnimation(0, 1);
+		if (mLastPosition == 0) {
+			animation = new AlphaAnimation(0, 1);
+		} else if (position > mLastPosition) {
+			animation = new TranslateAnimation(0, 0, mMetrics.heightPixels, 0);
+		} else {
+			animation = new TranslateAnimation(0, 0, 0 - mMetrics.heightPixels,
+					0);
+		}
+
+		// animation = new AlphaAnimation(0, 1);
 		// animation = new ScaleAnimation((float)1.0, (float)1.0 ,(float)0,
 		// (float)1.0);
-		animation.setDuration(500);
+		animation.setDuration(750);
 		convertView.startAnimation(animation);
 		animation = null;
+		mLastPosition = position;
 		return convertView;
 	}
 

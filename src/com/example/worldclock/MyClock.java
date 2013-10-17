@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -18,7 +17,7 @@ public class MyClock extends View {
 	private BitmapDrawable bmdMinute;
 	private BitmapDrawable bmdSecond;
 	private BitmapDrawable bmdDial;
-	private String cityName = "";
+	private TimeZone timeZone;
 
 	static Handler mClockHandler;
 
@@ -53,7 +52,7 @@ public class MyClock extends View {
 		public void run() {
 			postInvalidate();
 			mWaitTime = 1000 - (int) (System.currentTimeMillis() % 1000);
-			// Log.d("MyClock", mWaitTime + "");
+			// Log.e("DK2013", "" + mWaitTime);
 			mClockHandler.postDelayed(tickRunnable, mWaitTime);
 		}
 	};
@@ -62,11 +61,10 @@ public class MyClock extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		Calendar cal;
-		if (TextUtils.isEmpty(cityName)) {
+		if (timeZone == null) {
 			cal = Calendar.getInstance();
 		} else {
-			cal = Calendar.getInstance(TimeZone.getTimeZone(CommonUtil
-					.splitAndJoin(cityName)));
+			cal = Calendar.getInstance(timeZone);
 		}
 		int hour = cal.get(Calendar.HOUR);
 		int minute = cal.get(Calendar.MINUTE);
@@ -75,10 +73,10 @@ public class MyClock extends View {
 		float minuteRotate = minute * 6.0f;
 		float secondRotate = second * 6.0f;
 
-		centerX = canvas.getWidth() / 2;
-		centerY = canvas.getHeight() / 2;
+		centerX = getWidth() / 2;
+		centerY = getHeight() / 2;
 
-		int size = Math.min(canvas.getWidth(), canvas.getHeight());
+		int size = Math.min(getWidth(), getHeight());
 		scale = (double) size / bmdDial.getIntrinsicWidth();
 		bmdDial.setBounds(centerX - size / 2, centerY - size / 2, centerX
 				+ size / 2, centerY + size / 2);
@@ -107,7 +105,7 @@ public class MyClock extends View {
 	}
 
 	public void update(String cityName) {
-		this.cityName = cityName;
+		this.timeZone = TimeZone.getTimeZone(CommonUtil.splitAndJoin(cityName));
 		postInvalidate();
 	}
 }
