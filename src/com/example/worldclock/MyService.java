@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.IBinder;
+import android.util.Log;
 
 public class MyService extends Service implements
 		OnSharedPreferenceChangeListener {
@@ -76,6 +77,7 @@ public class MyService extends Service implements
 			setTimeAndDate();
 		}
 		if (cityCount == 2) {
+			cityName1 = mCityManager.loadCityName(1);
 			cityName2 = mCityManager.loadCityName(2);
 		}
 	}
@@ -85,16 +87,37 @@ public class MyService extends Service implements
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				running = false;
-				MyService.this.stopSelf();
+				if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+					running = false;
+					MyService.this.stopSelf();
+				} else if (intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
+					if (cityCount <= 1) {
+						setTimeAndDate();
+					}
+					Intent updateIntent = new Intent(UPDATE_WIDGET);
+					sendBroadcast(updateIntent);
+				} else if (intent.getAction()
+						.equals(Intent.ACTION_TIME_CHANGED)
+						| intent.getAction().equals(
+								Intent.ACTION_TIMEZONE_CHANGED)) {
+					if (cityCount <= 1) {
+						cityName1 = mCityManager.getCurrentCityName();
+						setTimeAndDate();
+						Log.e("DK2013", intent.getAction());
+					}
+					Intent updateIntent = new Intent(UPDATE_WIDGET);
+					sendBroadcast(updateIntent);
+				}
 			}
 		};
 		IntentFilter filter = new IntentFilter();
-		filter.addAction("android.intent.action.SCREEN_OFF");
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		filter.addAction(Intent.ACTION_TIME_TICK);
+		filter.addAction(Intent.ACTION_TIME_CHANGED);
+		filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
 		registerReceiver(mReceiver, filter);
 	}
 
-	// TODO change every minute; widget layout; click on widget;
 	private void setTimeAndDate() {
 		String[] strings = CommonUtil.getTargetTime(this, cityName1);
 		time = strings[0];
@@ -106,6 +129,7 @@ public class MyService extends Service implements
 			String key) {
 		if (key.equals("city_count")) {
 			cityCount = mCityManager.loadCityCount();
+			setTimeAndDate();
 		} else if (key.equals("first_city_name")) {
 			cityName1 = mCityManager.loadCityName(1);
 			setTimeAndDate();

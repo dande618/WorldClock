@@ -3,6 +3,7 @@ package com.example.worldclock;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -11,6 +12,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -91,37 +96,43 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 		case 0:
 			views = new RemoteViews(context.getPackageName(),
 					R.layout.clockwidget_layout1);
-			bitmap1 = drawClock(null);
+			bitmap1 = drawClock(null, cityCount);
 			views.setImageViewBitmap(R.id.dialimg1, bitmap1);
 			views.setTextViewText(R.id.tv_city, cityName1);
 			views.setTextViewText(R.id.tv_time, time);
 			views.setTextViewText(R.id.tv_date, date);
+			bindOnclickIntent(context, views);
 			appWidgetManager.updateAppWidget(appWidgetIds, views);
 			bitmap1.recycle();
 			break;
 		case 1:
 			views = new RemoteViews(context.getPackageName(),
 					R.layout.clockwidget_layout1);
-			bitmap1 = drawClock(TimeZone.getTimeZone(CommonUtil
-					.splitAndJoin(cityName1)));
+			bitmap1 = drawClock(
+					TimeZone.getTimeZone(CommonUtil.splitAndJoin(cityName1)),
+					cityCount);
 			views.setImageViewBitmap(R.id.dialimg1, bitmap1);
 			views.setTextViewText(R.id.tv_city, cityName1);
 			views.setTextViewText(R.id.tv_time, time);
 			views.setTextViewText(R.id.tv_date, date);
+			bindOnclickIntent(context, views);
 			appWidgetManager.updateAppWidget(appWidgetIds, views);
 			bitmap1.recycle();
 			break;
 		case 2:
 			views = new RemoteViews(context.getPackageName(),
 					R.layout.clockwidget_layout2);
-			bitmap1 = drawClock(TimeZone.getTimeZone(CommonUtil
-					.splitAndJoin(cityName1)));
-			bitmap2 = drawClock(TimeZone.getTimeZone(CommonUtil
-					.splitAndJoin(cityName2)));
+			bitmap1 = drawClock(
+					TimeZone.getTimeZone(CommonUtil.splitAndJoin(cityName1)),
+					cityCount);
+			bitmap2 = drawClock(
+					TimeZone.getTimeZone(CommonUtil.splitAndJoin(cityName2)),
+					cityCount);
 			views.setImageViewBitmap(R.id.dialimg1, bitmap1);
 			views.setImageViewBitmap(R.id.dialimg2, bitmap2);
 			views.setTextViewText(R.id.tv_city1, cityName1);
 			views.setTextViewText(R.id.tv_city2, cityName2);
+			bindOnclickIntent(context, views);
 			appWidgetManager.updateAppWidget(appWidgetIds, views);
 			bitmap1.recycle();
 			bitmap2.recycle();
@@ -133,11 +144,10 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 		System.gc();
 	}
 
-	private Bitmap drawClock(TimeZone timeZone) {
+	private Bitmap drawClock(TimeZone timeZone, int cityCount) {
 		Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
 		Canvas canvas = new Canvas(bitmap);
-		// TODO set time zone
 		Calendar cal;
 		if (timeZone == null) {
 			cal = Calendar.getInstance();
@@ -147,6 +157,7 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 		int hour = cal.get(Calendar.HOUR);
 		int minute = cal.get(Calendar.MINUTE);
 		int second = cal.get(Calendar.SECOND);
+		int amOrPm = cal.get(Calendar.AM_PM);
 		float hourRotate = hour * 30.0f + minute / 60.0f * 30.0f;
 		float minuteRotate = minute * 6.0f + second / 60.0f * 6.0f;
 		float secondRotate = second * 6.0f;
@@ -156,6 +167,9 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 		dial_drawable.setBounds(centerX - size / 2, centerY - size / 2, centerX
 				+ size / 2, centerY + size / 2);
 		dial_drawable.draw(canvas);
+		if (cityCount == 2) {
+			drawAMPM(amOrPm, canvas, scale, size);
+		}
 		drawHands(hour_drawable, canvas, hourRotate);
 		drawHands(minute_drawable, canvas, minuteRotate);
 		drawHands(second_drawable, canvas, secondRotate);
@@ -173,5 +187,28 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 				+ (mTempHeigh / 2));
 		handBitmap.draw(canvas);
 		canvas.restore();
+	}
+
+	private void bindOnclickIntent(Context context, RemoteViews views) {
+		Intent clickIntent = new Intent(context, MainActivity.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+				clickIntent, 0);
+		views.setOnClickPendingIntent(R.id.widget, pendingIntent);
+	}
+
+	private void drawAMPM(int amOrPm, Canvas canvas, double scale, int height) {
+		Paint paint = new Paint();
+		// paint.setStrokeWidth((float) (60 * scale));
+		paint.setTextSize((float) (30 * scale));
+		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+		paint.setTextAlign(Align.CENTER);
+		int offset = (int) (30 * scale);
+		if (amOrPm == 0) {
+			paint.setColor(Color.GREEN); // Text Color
+			canvas.drawText("AM", height / 2, height / 2 + offset, paint);
+		} else {
+			paint.setColor(Color.BLUE); // Text Color
+			canvas.drawText("PM", height / 2, height / 2 + offset, paint);
+		}
 	}
 }
