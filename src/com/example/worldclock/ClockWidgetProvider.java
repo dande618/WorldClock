@@ -14,8 +14,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -197,18 +195,22 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 	}
 
 	private void drawAMPM(int amOrPm, Canvas canvas, double scale, int height) {
+		long time1 = System.currentTimeMillis();
 		Paint paint = new Paint();
-		// paint.setStrokeWidth((float) (60 * scale));
-		paint.setTextSize((float) (30 * scale));
-		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+		paint.setTextSize((float) (25 * scale));
+		paint.setAntiAlias(true);
+		paint.setDither(true);
+		// paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
 		paint.setTextAlign(Align.CENTER);
 		int offset = (int) (30 * scale);
 		if (amOrPm == 0) {
-			paint.setColor(Color.GREEN); // Text Color
-			canvas.drawText("AM", height / 2, height / 2 + offset, paint);
+			paint.setColor(0xdd2c8e11); // Text Color
+			canvas.drawText("AM", height / 2, (height + offset) / 1.65f, paint);
 		} else {
-			paint.setColor(Color.BLUE); // Text Color
-			canvas.drawText("PM", height / 2, height / 2 + offset, paint);
+			paint.setColor(0xdd174aa9); // Text Color
+			canvas.drawText("PM", height / 2, (height + offset) / 1.65f, paint);
 		}
+		long time2 = System.currentTimeMillis();
+		System.out.println(time2 - time1);
 	}
 }

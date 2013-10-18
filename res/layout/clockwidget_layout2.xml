@@ -3,11 +3,12 @@
     android:id="@+id/widget"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_margin="10dip"
-    android:background="#55FFFFFF"
+    android:layout_margin="0dip"
+    android:background="@drawable/bg_widget"
     android:baselineAligned="false"
     android:gravity="center"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:padding="5dip" >
 
     <RelativeLayout
         android:layout_width="fill_parent"

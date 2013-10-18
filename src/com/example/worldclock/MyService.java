@@ -100,7 +100,7 @@ public class MyService extends Service implements
 						.equals(Intent.ACTION_TIME_CHANGED)
 						| intent.getAction().equals(
 								Intent.ACTION_TIMEZONE_CHANGED)) {
-					if (cityCount <= 1) {
+					if (cityCount < 1) {
 						cityName1 = mCityManager.getCurrentCityName();
 						setTimeAndDate();
 						Log.e("DK2013", intent.getAction());
