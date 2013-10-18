@@ -16,6 +16,12 @@
         android:layout_below="@+id/view_pager"
         android:background="?android:attr/listDivider" />
 
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
     <AutoCompleteTextView
         android:id="@+id/edit_text"
         android:layout_width="fill_parent"
@@ -85,9 +91,5 @@
             android:layout_weight="1"
             android:background="@drawable/bg_button" />
     </LinearLayout>
-
-    <EditText
-        android:layout_width="0dip"
-        android:layout_height="0dip" />
 
 </RelativeLayout>
