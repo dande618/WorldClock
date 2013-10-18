@@ -67,11 +67,15 @@ public class MyService extends Service implements
 	private void fetchData() {
 		mCityManager = CityManager.getInstance(this);
 		cityCount = mCityManager.loadCityCount();
-		if (cityCount > 0) {
+		if (cityCount == 0) {
+			cityName1 = mCityManager.getCurrentCityName();
+			setTimeAndDate();
+		}
+		if (cityCount == 1) {
 			cityName1 = mCityManager.loadCityName(1);
 			setTimeAndDate();
 		}
-		if (cityCount > 1) {
+		if (cityCount == 2) {
 			cityName2 = mCityManager.loadCityName(2);
 		}
 	}

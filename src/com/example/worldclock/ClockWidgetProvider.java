@@ -49,7 +49,6 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 		}
 		if (intent.getAction().equals(MyService.UPDATE_WIDGET)) {
 			updateRemoteViews(context, appWidgetManager, appWidgetIds);
-			System.gc();
 		} else if (intent.getAction().equals(
 				"android.intent.action.USER_PRESENT")) {
 			startService(context);
@@ -121,6 +120,8 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 					.splitAndJoin(cityName2)));
 			views.setImageViewBitmap(R.id.dialimg1, bitmap1);
 			views.setImageViewBitmap(R.id.dialimg2, bitmap2);
+			views.setTextViewText(R.id.tv_city1, cityName1);
+			views.setTextViewText(R.id.tv_city2, cityName2);
 			appWidgetManager.updateAppWidget(appWidgetIds, views);
 			bitmap1.recycle();
 			bitmap2.recycle();
@@ -128,9 +129,8 @@ public class ClockWidgetProvider extends AppWidgetProvider {
 		default:
 			break;
 		}
-		views = null;
 		bitmap1 = bitmap2 = null;
-		dial_drawable = hour_drawable = minute_drawable = second_drawable = null;
+		System.gc();
 	}
 
 	private Bitmap drawClock(TimeZone timeZone) {
